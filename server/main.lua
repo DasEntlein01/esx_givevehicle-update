@@ -1,5 +1,5 @@
 ESX = nil
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+ESX = exports["es_extended"]:getSharedObject()
 
 --give car with a random plate- 1: playerID 2: carModel (3: plate)
 RegisterCommand('givecar', function(source, args)
@@ -176,3 +176,12 @@ function havePermission(_source)
 	
 	return isAdmin
 end
+
+
+ESX.RegisterServerCallback('leckmichhurensoh', function (source, cb, plate)
+	MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE plate = @plate', {
+		['@plate'] = plate
+	}, function (result)
+		cb(result[1] ~= nil)
+	end)
+end)
