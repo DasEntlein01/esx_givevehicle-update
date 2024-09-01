@@ -4,7 +4,7 @@ description 'made by MEENO and DasEntlein'
 game 'gta5'
 
 server_scripts {
-	'@oxmy/lib/MySQL.lua',
+	'@oxmysql/lib/MySQL.lua',
 	'@es_extended/locale.lua',
 	'server/main.lua',
 	'config.lua',
