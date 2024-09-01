@@ -2,7 +2,7 @@ ESX = nil
 
 Citizen.CreateThread(function()
 	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		ESX = exports["es_extended"]:getSharedObject()
 		Citizen.Wait(0)
 	end
 end)
@@ -47,7 +47,7 @@ AddEventHandler('esx_giveownedcar:spawnVehicle', function(playerID, model, playe
 			SetEntityVisible(vehicle, false, false)
 			SetEntityCollision(vehicle, false)
 			
-			local newPlate     = exports.esx_vehicleshop:GeneratePlate()
+			local newPlate     = GeneratePlate()
 			local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
 			vehicleProps.plate = newPlate
 			TriggerServerEvent('esx_giveownedcar:setVehicle', vehicleProps, playerID, vehicleType)
@@ -78,7 +78,7 @@ AddEventHandler('esx_giveownedcar:spawnVehiclePlate', function(playerID, model, 
 	local generatedPlate = string.upper(plate)
 	local carExist  = false
 
-	ESX.TriggerServerCallback('esx_vehicleshop:isPlateTaken', function (isPlateTaken)
+	ESX.TriggerServerCallback('leckmichhurensoh', function (isPlateTaken)
 		if not isPlateTaken then
 			ESX.Game.SpawnVehicle(model, coords, 0.0, function(vehicle) --get vehicle info	
 				if DoesEntityExist(vehicle) then
@@ -119,3 +119,31 @@ AddEventHandler('esx_giveownedcar:spawnVehiclePlate', function(playerID, model, 
 		end		
 	end	
 end)
+
+
+function GeneratePlate()
+	local generatedPlate
+	local doBreak = false
+
+	while true do
+		Citizen.Wait(2)
+		math.randomseed(GetGameTimer())
+		if Config.PlateUseSpace then
+			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. ' ' .. GetRandomNumber(Config.PlateNumbers))
+		else
+			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers))
+		end
+
+		ESX.TriggerServerCallback('leckmichhurensoh', function (isPlateTaken)
+			if not isPlateTaken then
+				doBreak = true
+			end
+		end, generatedPlate)
+
+		if doBreak then
+			break
+		end
+	end
+
+	return generatedPlate
+end
