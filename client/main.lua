@@ -1,11 +1,4 @@
-ESX = nil
-
-Citizen.CreateThread(function()
-	while ESX == nil do
-		ESX = exports["es_extended"]:getSharedObject()
-		Citizen.Wait(0)
-	end
-end)
+ESX = exports["es_extended"]:getSharedObject()
 
 TriggerEvent('chat:addSuggestion', '/givecar', 'Give a car to player', {
 	{ name="id", help="The ID of the player" },
